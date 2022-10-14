@@ -1,15 +1,12 @@
 import { Request, Response } from 'express';
-import {TeacherRepository} from '../repositories/teacher.repository'
-import {StudentRepository} from '../repositories/student.repository'
+import {TeacherService} from '../services/teacher.service'
 
 export default class TeacherController {
 
-    private teacherRepository: TeacherRepository
-    private studentRepository: StudentRepository
+    private teacherService: TeacherService
 
     constructor() {
-        this.teacherRepository = new TeacherRepository()
-        this.studentRepository = new StudentRepository()
+        this.teacherService = new TeacherService()
 
         this.assignStudents = this.assignStudents.bind(this)
         this.getCommonStudents = this.getCommonStudents.bind(this)
@@ -26,14 +23,14 @@ export default class TeacherController {
         if (!studentEmails) res.status(400).send({ error: "Students should be defniend" });
         if (studentEmails.length === 0) res.status(400).send({ error: "There should be at least one student" });
 
-        this.teacherRepository.registerStudents(teacherEmail, studentEmails);
+        this.teacherService.registerStudents(teacherEmail, studentEmails);
 
         res.status(204).send()
     }
 
     async getCommonStudents(req: Request, res: Response) {
         const teacherEmails : any  = Array.isArray(req.query.teacher) ? req.query.teacher : [req.query.teacher]
-        const response = await this.teacherRepository.getCommonStudents([...teacherEmails])
+        const response = await this.teacherService.getCommonStudents([...teacherEmails])
 
         let statusCode = 0
 
@@ -50,7 +47,7 @@ export default class TeacherController {
 
     async suspendStudent(req: Request, res: Response) {
         const studentEmail = req.body.student
-        const response = await this.teacherRepository.suspendStudent(studentEmail)
+        const response = await this.teacherService.suspendStudent(studentEmail)
 
         if(response[0]){
             res.status(204).send()
@@ -64,27 +61,15 @@ export default class TeacherController {
     async getStudentsForNotification(req: Request, res: Response){
         const  teacherEmail = req.body.teacher
         const notification = req.body.notification
-        let studetEmailsFromNotification : string[] = []
 
         // Check if the teacher email is valid
-        const teacher = await this.teacherRepository.getTeacherByEmail(teacherEmail);
+        const teacher = await this.teacherService.getTeacherByEmail(teacherEmail);
         if(teacher === null){
             res.status(400).send({
                 "error" : "Invalid email provided for teacher"
             })
         }
-
-        notification.split(' ').forEach((word:string) => {
-            if (word[0] === '@') {
-                let studentEmail = word.substr(1);
-                studetEmailsFromNotification.push(studentEmail);
-            }
-        });
-        
-        // Get all students who are registed under specified teacher
-        const studetEmailsOfTeacher = await this.teacherRepository.getCommonStudents([teacherEmail])
-        const allStudentEmails = studetEmailsOfTeacher.concat(studetEmailsFromNotification)
-        const uniqueStudentEmails : Set<string> = new Set(allStudentEmails)
+        const uniqueStudentEmails = await this.teacherService.getStudentsForNotification(teacherEmail, notification)
 
         res.status(200).send({
             "recipients" : Array.from(uniqueStudentEmails)

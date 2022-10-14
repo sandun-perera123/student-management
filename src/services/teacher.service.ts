@@ -2,7 +2,7 @@ const Teacher = require('../models').Teacher
 const Student = require('../models').Student
 import Sequelize from 'sequelize'
 
-export class TeacherRepository {
+export class TeacherService {
 
     async registerStudents(teacherEmail: string, studentEmails: Array<string>) {
 
@@ -53,9 +53,23 @@ export class TeacherRepository {
         )
     }
 
-    async getStudentsForNotification(teacherEmail : string, studentEmails: string[]){
-        console.log("------------ teacherEmail",teacherEmail)
-        console.log("------------ studentEmails",studentEmails)
+    async getStudentsForNotification(teacherEmail : string, notification: string){
+
+        let studetEmailsFromNotification : string[] = []
+
+        notification.split(' ').forEach((word:string) => {
+            if (word[0] === '@') {
+                let studentEmail = word.substr(1);
+                studetEmailsFromNotification.push(studentEmail);
+            }
+        });
+        
+        // Get all students who are registed under specified teacher
+        const studetEmailsOfTeacher = await this.getCommonStudents([teacherEmail])
+        const allStudentEmails = studetEmailsOfTeacher.concat(studetEmailsFromNotification)
+        const uniqueStudentEmails : Set<string> = new Set(allStudentEmails)
+        
+        return uniqueStudentEmails
     }
 
     async getTeacherByEmail(teacherEmail: string){

@@ -1,13 +1,8 @@
 import http from 'http';
 import expressServer from './server';
-//import database from  '../src/config/config'
 import dotenv from 'dotenv'
 dotenv.config()
 
-
-
-
-// Normalize port number which will expose server
 const port = process.env.NODE_DOCKER_PORT || 8080;
 
 // Instantiate the expressServer class
@@ -43,7 +38,7 @@ function onError(error: NodeJS.ErrnoException): void {
 
 function onListening(): void {
     const addr = server.address();
-    
+    console.log("Server is running on : ",addr);
 }
 
 module.exports = server.listen(port);
