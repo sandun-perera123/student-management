@@ -66,7 +66,7 @@ describe('POST /api/register', () => {
                   .end((err: any, res: any) => {
                         should.exist(res.body);
                         res.should.have.status(400);
-                        res.body.error.should.be.eql("Teacher should be defniend");
+                        res.body.error.should.be.eql("Teacher should be defined");
                         done();
                   });
       });

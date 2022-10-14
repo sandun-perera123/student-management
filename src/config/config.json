@@ -11,7 +11,7 @@
       "username": "root",
       "password": "",
       "database": "student_management",
-      "host": "mysqldb",
+      "host": "db",
       "dialect": "mysql",
       "port":"3306"
     },
@@ -19,7 +19,7 @@
       "username": "root",
       "password": "",
       "database": "student_management",
-      "host": "mysqldb",
+      "host": "db",
       "dialect": "mysql",
       "port":"3306"
     }

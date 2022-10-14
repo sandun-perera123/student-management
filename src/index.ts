@@ -3,7 +3,7 @@ import expressServer from './server';
 import dotenv from 'dotenv'
 dotenv.config()
 
-const port = process.env.NODE_DOCKER_PORT || 8080;
+const port = process.env.NODE_DOCKER_PORT || 3002;
 
 // Instantiate the expressServer class
 let expressInstance = new expressServer().expressInstance;

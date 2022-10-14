@@ -1,5 +1,5 @@
-module.exports = function (sequelize: any, DataTypes: any) {
-  const Student = sequelize.define("Student", {
+module.exports =  function(sequelize : any, DataTypes : any){
+  const Student =  sequelize.define("Student", {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -20,11 +20,11 @@ module.exports = function (sequelize: any, DataTypes: any) {
     updatedAt: 'updated_at',
   })
 
-  Student.associate = function (models: any) {
+  Student.associate = function(models : any){
 
     Student.belongsToMany(models.Teacher, {
       through: "StudentTeachers",
-    })
+  })
 
   }
 
