@@ -4,7 +4,7 @@ import Sequelize from 'sequelize'
 
 export class TeacherService {
 
-    async registerStudents(teacherEmail: string, studentEmails: Array<string>) {
+    async registerStudents(teacherEmail: string, studentEmails: Array<string>){
 
         const [teacher, created] = await Teacher.findOrCreate({
             where: { email: teacherEmail },
@@ -12,7 +12,7 @@ export class TeacherService {
                 email: teacherEmail
             }
         })
-
+        
         studentEmails.forEach(async studentEmail => {
 
             const [student, created] = await Student.findOrCreate({
@@ -22,9 +22,10 @@ export class TeacherService {
                     is_suspended: 0
                 }
             })
-
             student.addTeacher(teacher);
         })
+
+        return true
     }
 
     async getCommonStudents(teacherEmails: Array<string>) {
@@ -67,15 +68,21 @@ export class TeacherService {
         // Get all students who are registed under specified teacher
         const studetEmailsOfTeacher = await this.getCommonStudents([teacherEmail])
         const allStudentEmails = studetEmailsOfTeacher.concat(studetEmailsFromNotification)
-        const uniqueStudentEmails : Set<string> = new Set(allStudentEmails)
-        
-        return uniqueStudentEmails
+        return allStudentEmails
     }
 
     async getTeacherByEmail(teacherEmail: string){
         return await Teacher.findOne({
             where : {
                 email : teacherEmail
+            }
+        })
+    }
+
+    async getStudentByEmail(studentEmail: string){
+        return await Student.findOne({
+            where : {
+                email : studentEmail
             }
         })
     }

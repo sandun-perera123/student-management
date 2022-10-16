@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import  TeacherController  from '../controllers/teacher.controller';
+import  {TeacherService}  from '../services/teacher.service';
 
 export default class MainRouter {
 
@@ -8,7 +9,7 @@ export default class MainRouter {
 
     constructor() {
 
-        this.teacherController = new TeacherController();
+        this.teacherController = new TeacherController(new TeacherService());
         
         // Initialize router object
         this.router = Router({ mergeParams: true });

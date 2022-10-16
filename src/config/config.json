@@ -1,15 +1,15 @@
 {
     "development": {
       "username": "root",
-      "password": "",
+      "password": "123",
       "database": "student_management",
-      "host": "localhost",
+      "host": "db",
       "dialect": "mysql",
       "port":"3306"
     },
     "test": {
       "username": "root",
-      "password": "",
+      "password": "123",
       "database": "student_management",
       "host": "db",
       "dialect": "mysql",
